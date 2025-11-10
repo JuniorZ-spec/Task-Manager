@@ -22,7 +22,7 @@ export const createTask = async (req, res) => {
     }
 
     catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -34,7 +34,7 @@ export const getTasks = async (req, res) => {
         const tasks = (await Task.find({ owner: req.user.id })).sort({ createdAt: -1 });
         res.status(200).json({ success: true, tasks });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -44,12 +44,16 @@ export const getTasks = async (req, res) => {
 export const getTaskById = async (req, res) => {
     try {
         const task = await Task.findOne({ _id: req.params.id, owner: req.user.id });
-        if (!task) {
-            return res.status(404).json({ success: false, message: 'Task not found' });
-        }
+
+        if (!task) return res.status(404).json({
+            success: false,
+            message: 'Task not found'
+        });
+
         res.status(200).json({ success: true, task });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+    }
+    catch (error) {
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -70,7 +74,7 @@ export const updateTask = async (req, res) => {
         }
         res.status(200).json({ success: true, task: updated });
     } catch (err) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -84,6 +88,6 @@ export const deleteTask = async (req, res) => {
         }
         res.status(200).json({ success: true, message: 'Task deleted successfully' });
     } catch (err) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 };
